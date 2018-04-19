@@ -1,0 +1,658 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Containing The Toolchain</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css">
+
+	<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+
+	<link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+	<div class="docker-background"></div>
+	<div class="reveal">
+		<div class="slides">
+
+			<section class="splash" data-state="title-splash">
+				<h1>Containing The Toolchain</h1>
+				<h2>with Docker</h2>
+				<aside class="notes">
+
+				</aside>
+			</section>
+
+			<section id="developer-machine-setup" data-background-color="#0DB7ED">
+				<h1 class="title">The "Setup"</h1>
+				<aside class="notes">
+					Setting up a developer environment for the first time is so exciting.
+					You get to install all of this software, not knowing what any of it
+					does but you do it anyway!
+				</aside>
+			</section>
+
+			<section id="setup-steps">
+				<blockquote>
+					Instructions for setting up a developer machine:</quote>
+					<br/>
+					Step 1: Download ...
+					<br/>
+					Step 2: Install ...
+				</blockquote>
+				<aside class="notes">
+					We all have the instruction manual on configuring a new developer machine,
+					it looks a little like this...
+				</aside>
+			</section>
+
+			<section id="get-coffee">
+				<blockquote>
+					...<br/>
+					Get a cup of coffee, this will take a while...
+				</blockquote>
+				<aside class="notes">
+					... and then you come across this wonderful instruction ... but why?
+					What if I don't drink coffee?
+				</aside>
+			</section>
+
+			<section id="we-have-issues">
+				<h1>we have
+					<span>issues</span>
+				</h1>
+				<aside class="notes">
+					In many teams, developer machine setup and maintenance is cumbersome. It frequently comes down
+					to lack of documentation of the developer environment, workarounds for your specific project,
+					or just plain old tribal knowledge on how to get up and running. This problem also extends to
+					most open source projects as well.
+				</aside>
+			</section>
+
+			<section id="the-problem">
+				<div class="fragment current-visible zero">
+					<h2>Dependency Differences</h2>
+					<h3>
+						<ul class="inline-list">
+							<li>package.lock</li>
+							<li>Gemfile.lock</li>
+							<li>Cargo.lock</li>
+						</ul>
+					</h3>
+				</div>
+				<div class="fragment current-visible zero">
+					<h2>Machine Configurations</h2>
+					<h3>
+						<ul class="inline-list">
+							<li>Virtualization</li>
+							<li>Vagrant</li>
+						</ul>
+					</h3>
+				</div>
+				<div class="fragment current-visible zero">
+					<h2>Runtime Concurrency</h2>
+					<h3>
+						<ul class="inline-list">
+							<li>rvm (Ruby)</li>
+							<li>pyenv (Python)</li>
+						</ul>
+					</h3>
+				</div>
+				<aside class="notes">
+					So what are these issues specifically? The first is dependency management and versioning. Even in a SemVer
+					scheme, there can be minor differences in a build that can cause something to break. We've solved this using
+					lock files;
+
+					The second, and most problematic, is machine configuration. Small nuances with machine configuration can cause
+					projects to fail compilation or runtime errors to appear. This is a pain point for a lot of developers. Virtualization
+					and Vagrant attempt to solve these issues with machine configurations, but they don't account for minor differences
+					in the operating system that they are configured on.
+
+					The third is not usually a major issue, but can cause issues between individual projects on a developers machine.
+					When you have various versions of a runtime installed on your machine, it can lead to compatability issues between
+					libraries. This is especially true with compiled languages.
+				</aside>
+			</section>
+
+			<!--
+					TYPICAL TOOLCHAINS
+				-->
+			<section id="typical-toolchains-splash" data-background-color="#0DB7ED">
+				<h1 class="title">Typical Toolchains</h1>
+			</section>
+
+			<section id="typical-toolchains">
+				<div class="fragment">
+					<h2>Web</h2>
+					<ul class="inline-list">
+						<li>Webpack</li>
+						<li>Sass</li>
+						<li>Grunt</li>
+						<li>Nginx</li>
+						<li>Postgres</li>
+						<li>Npm</li>
+					</ul>
+				</div>
+				<div class="fragment">
+					<h2>C++</h2>
+					<ul class="inline-list">
+						<li>Vim</li>
+						<li>Clang</li>
+						<li>Makefiles</li>
+					</ul>
+				</div>
+				<div class="fragment">
+					<h2>C# WebAPI</h2>
+					<ul class="inline-list">
+						<li>Kestrel</li>
+						<li>MsBuild</li>
+						<li>dotnet</li>
+						<li>CLR</li>
+					</ul>
+				</div>
+				<div class="fragment current-visible zero">
+					<h2>Go</h2>
+					<ul class="inline-list">
+						<li>Go</li>
+						<li>GOPATH</li>
+						<li>go-get</li>
+					</ul>
+				</div>
+				<aside class="notes">
+					Let's look at some typical toolchains. In the web space, we usually have a combination of web asset
+					bundling tools like Webpack and Rollup, preprocessors for Javascript and CSS, web servers to server
+					the application and databases to store persistant data.
+
+					In C++, it's a bit simpler. A compiler, a make file or a metabuild system file like CMake or Ninja.
+					There are also the various system shared libraries that are linked to in the build process as well as
+					third party header files and library files.
+
+					C# is even easier than C++, MsBuild takes care of a lot of the nuances associated with building
+					your project via the CSPROJ files. The new 'dotnet' command line tool in .NET Core provides a great
+					set of commands to manage the project. And finally the Kestrel server takes away the need for IIS
+					application hosting.
+
+					Finally, we have Go. Go is an interesting little language in that it's developer environment resembles
+					an old school Smalltalk machine. Every piece of Go code on a developers machine is usually, and recommended, to
+					be located in a single workspace directory. It's a different way of looking at project development and provides
+					unique challenges to developers used to traditional project directory structures and packaging. Go also is
+					capable of cross-building binaries for other platforms and architectures.
+				</aside>
+			</section>
+
+			<!--
+					COMBINATIONS OF TOOLCHAINS
+				-->
+			<section id="combine-problem-splash">
+				<h1>Combinations?</h2>
+				<aside class="notes">
+					So what if we need to combine multiple technologies and stacks to 'compose' our project? One solution
+					that is very popular right now is the concept of microservices. Breaking the application into smaller
+					pieces and developing them independently of each other. This works great for the most part, but it still
+					requires generalist programmers to maintain multiple developer environments based on their tasks in the project.
+
+					Think about your workbench at home. How many projects to you have in-flight? If you have more than one, chances
+					are that the surface of your workbench and the surrounding area is cluttered with bits and pieces of the projects
+					that you are working on.
+
+					Imagine if you could have a brand new room with a clean workbench for each project you are working on...
+				</aside>
+			</section>
+
+			<section id="combine-problem">
+				<div class="twist-container">
+					<span class="left-twist">
+						USE
+					</span>
+					<h1>Docker</h1>
+				</div>
+				<aside class="notes">
+					In the software world, we can achieve this with Docker.
+				</aside>
+			</section>
+
+			<!--
+			WHAT IS DOCKER
+			-->
+			<section id="what-is-docker">
+				<h2>Why it's useful</h2>
+				<h3>Simple Packaging: Build Once, Run Everywhere</h3>
+				<aside class="notes">
+					I won't bother you with the details about what Docker is and how containerization works.
+					What we really care about is the fact that a Docker container will run exactly the same
+					anywhere.
+				</aside>
+			</section>
+
+			<section id="toolchain-applications-splash" data-background-color="#0DB7ED">
+				<h1 class="title">Toolchain Applications</h1>
+				<aside class="notes">
+					How can we use this feature to our benefit in our toolchains? Let's cover some of the major
+					benefits we get from using containers.
+				</aside>
+			</section>
+
+			<!--
+			DOCKER TOOLCHAINS
+			-->
+			<section id="docker-toolchains">
+				<div class="fragment current-visible zero" id="lock-runtimes">
+					<h2>Locking Runtime Verions to Image</h2>
+					<ul>
+						<li>Node 8</li>
+						<li>Node 7</li>
+						<li>Python 2.6</li>
+						<li>Python 2.7</li>
+						<li>Python 3.4</li>
+						<li>Ruby 1.8</li>
+						<li>Ruby 2.0</li>
+					</ul>
+				</div>
+
+				<div class="fragment current-visible zero">
+					<h2>Pre-build Developer Containers</h2>
+					<h3>
+						Contains all require tooling: compilers, configuration, etc.
+					</h3>
+				</div>
+
+				<div class="fragment current-visible zero">
+					<h2>Packaging for Alpha, Beta, Gamma</h2>
+					<h3>
+						Include environment-specific diagnostic tools and configuration
+					</h3>
+				</div>
+
+				<div class="fragment current-visible zero">
+					<h2>Service Orchestration</h2>
+					<h3>
+						Deploy an entire stack locally
+					</h3>
+				</div>
+
+				<div class="fragment current-visible zero">
+					<h2>Reduce time-to-first Code</h2>
+					<h3>Pull the image and run or compose it up</h3>
+				</div>
+				<aside class="notes">
+					The first is that we are able to lock our runtime versions to a version of a container. This means
+					that if our legacy project depends on Ruby 1.8, we can create a developer environment container that
+					only contains Ruby 1.8. We can then have new projects depend on Ruby 2X and not worry about breaking
+					the legacy application.
+
+					Following that idea, we can create self-contained developer containers that not only contain runtimes but
+					also build tools used by the project. Any custom tools that are used in the development cycle of the project
+					are easily accessible and require zero installation on the developer machine. We can even version this container
+					and release new toolchains as the project evolves.
+
+					We also gain the benefit of packaging for pre-production environments. We can build the application in our
+					continuous integration pipeline, throw in some debugging and diagnostic tools with environment specific
+					configurations and deploy them for testing.
+
+					On local developer machines, we can also deploy an entire runtime stack on the local machine. A great
+					example of this is a web application that depends on several microservices. Those microservices can be
+					run in containers on the local machine without spending days setting up an environment for them to run in.
+
+					And finally we can reduce the time to first code for a new developer from several hours to minutes.
+				</aside>
+			</section>
+
+			<!--
+				NPM INIT DEMO
+			-->
+			<section id="show-me-something">
+				<h2>So What?</h2>
+				<aside class="notes">
+					So you're probably thinking: "Show me something!". Let's take a look at an example
+					of using a Docker container to initialize a new Node project with npm init.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-npm-init" data-state="vs-npm-init">
+				<video src="images/docker-npm-init.mp4"></video>
+				<aside class="notes">
+					Here we are using the 'docker run' command, which is used to start a new container from
+					an existing image. We use -it to signal an interactive tty attachment to the container
+					and mount the present working directory into the container at /projects and set this
+					as the working directory in the container. We complete the command by specifying the
+					image name and the command we wish to run inside the container; in this case npm init
+				</aside>
+			</section>
+
+			<section id="command-break-down">
+				<code class="powershell" data-trim data-noescape>
+					<span class="fragment visible">docker run</span>
+					<span class="fragment visible"> -it --rm</span>
+					<span class="fragment visible"> -v ${PWD}:/project -w /project</span>
+					<span class="fragment visible"> node:alpine</span>
+					<span class="fragment visible"> npm init .</span>
+				</code>
+				<aside class="notes">
+					That was a bit fast, so let's break down the command into it's components.
+					First we have 'docker run'. This command says to create and run a new container.
+					Next we have '-it --rm', which tells Docker that this is an interactive container
+					and to allocate a pseudo-TTY to the container. The 'rm' part tells Docker to remove
+					this container once the main process has finished executing.
+
+					'-v' is for volume mounting. Docker allows us to mount directories on the host machine
+					inside the container at any location that we choose. In this case, we are mounting
+					the current working directory into a directory called /project in the container and 
+					setting the working directory to /project.
+
+					We then specify the image that we would like to use for this container. Alpine linux
+					is a minimalistic linux distibution and Node Alpine is Alpine containing just NodeJS
+					binaries.
+
+					The final argument to docker run is the command we wish to run in the container. For This
+					invocation, we are running 'npm init' to create a new NPM package in the current working
+					directory.
+
+					Simple enough hey?
+				</aside>
+			</section>
+
+			<!--
+				 DEVELOPMENT SHELLS
+			-->
+			<section id="development-shells-splash" data-background-color="#0DB7ED">
+				<h1 class="title">Development Shells</h2>
+				<aside class="notes">
+					This seems really verbose, can we simplify our commands to make it seem as if we are
+					working natively on the host machine? For this we need Development Shells.
+				</aside>
+			</section>
+			
+			<section id="development-shells">
+				<blockquote>
+					A development shell is a temporary environment that is created in the current shell for the purpose of providing conveniences
+					for developing on the current project.
+				</blockquote>
+			</section>
+			
+			<section id="shell-containers">
+				<h2>Shell Containers</h2>
+				<pre><code class="powershell" data-trim>
+					docker run --name npm-shell -dt -v ${PWD}:/project -w /project node:alpine sh
+				</code></pre>
+				<aside class="notes">
+					The first thing we need to create a development shell is a persistant container
+					to execute commands against. Because it is always running, the invocations into
+					the container are extremely fast.
+
+					Here we see the same command from the previous example. The only difference here is
+					we've switched the '-it' to '-dt' which signals a detached container.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-npm-shell-boot" data-state="vs-npm-shell-boot">
+				<video src="images/docker-npm-shell-boot.mp4"></video>
+				<aside class="notes">
+					Let's boot this node container using the above command.
+				</aside>
+			</section>
+
+			<section id="docker-exec">
+				<h2>Executing Commands in the Container</h2>
+				<pre><code class="powershell" data-trim>
+					docker exec -it npm-shell echo "Are you suggesting that coconuts migrate?"
+				</code></pre>
+				<aside class="notes">
+					Now that we have a persistant shell container, how do we interact with it?
+					Docker includes the 'exec' command that allows invoking a command inside
+					the context of a running container.
+
+					We can use this, for example, to echo a string to the screen.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-npm-shell-install" data-state="vs-npm-shell-install">
+				<video src="images/docker-npm-shell-install.mp4"></video>
+				<aside class="notes">
+					We can also use this to break into a real command shell inside the container and
+					invoke commands as if we had SSH'd into the container. Here we are using NPM to install
+					webpack and React. As you can see, it's as if we executed this locally in our terminal
+					on the host.
+
+					This still seems pretty complicated, can we simplify it further? YES WE CAN!
+				</aside>
+			</section>
+
+			<section id="environment-augmentation">
+				<h2>Environment Augmentation Script</h2>
+				<pre><code class="powershell" data-trim>
+					function npm {
+						docker exec npm-shell npm @args
+					}
+					
+					function dotnet {
+						docker exec dotnet-shell dotnet @args
+					}
+				</code></pre>
+				<aside class="notes">
+					We can create an environment augmentation script that defines wrappers
+					around common commands that we might use on a regular basis when working on
+					the project. In this script we've defined two PowerShell functions, one for
+					invoking NPM in the container and another to invoke the dotnet CLI command.
+
+					This pattern is common in the Ruby and Python communities for managing Runtime
+					versions with rbenv and pyenv respectively.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-dev-shell-npm" data-state="vs-dev-shell-npm">
+				<video src="images/docker-dev-shell-npm.mp4"></video>
+				<aside class="notes">
+					Using this technique, we can make it appear as if we are running local commands in our
+					host shell, but we are really redirecting these commands into the container context. We
+					can utilize the "source script" feature of PowerShell to bring in these functions into 
+					local shell context. From here we can invoke npm just we would if we had installed
+					node on the host system.
+				</aside>
+			</section>
+
+			<section id="mixed-environments" data-background-color="#0DB7ED">
+				<h1 class="title">Mixed Environments</h1>
+				<aside class="notes">
+					Where Docker really shines is in mixed development environments. What I mean by this
+					is a project that has multiple programming languages in a complicated stack.
+				</aside>
+			</section>
+
+			<section id="dotnet" data-background-image="images/dotnet-code.png">
+				<h1>dotnet core 2.0</h1>
+				<aside class="notes">
+					Let's talk about .NET core 2.0; specifically WebAPI. Here at Microsoft we love our C#. We
+					have an NPM project already setup with React and Webpack for the front-end, let's build
+					a little REST API for our application to use.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-dotnet-setup" data-state="vs-dotnet-setup">
+				<video src="images/docker-dotnet-setup.mp4"></video>
+				<aside class="notes">
+					First, we will start our dotnet-shell container, similar to the npm-shell
+					we've already created. Second, we'll run the dotnet CLI command to create
+					a new WebAPI project in the current project directory. As you can see, it
+					created all the required files for our dotnet application.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-dotnet-serve" data-state="vs-dotnet-serve">
+				<video src="images/docker-dotnet-serve.mp4"></video>
+				<aside class="notes">
+					Next, we'll run our application using the 'dotnet run' command. Our application is now accessible
+					on localhost at port 8080.
+				</aside>
+			</section>
+
+			<section id="not-impressed">
+				<h2>😒</h2>
+				<aside class="notes">
+					This still isn't very impressive, all of this I can do on my local machine without Docker!
+				</aside>
+			</section>
+
+			<section id="go-splash" data-background-image="images/go-code.png">
+				<h1>Golang</h1>
+				<aside class="notes">
+					Let' talk about Go! If you're not familiar with the Go language, programmers keep all of their
+					Go code in a single workspace. Each project does not have a separate workspace. Usually this
+					directory is C:\Go or /go. This makes it hard to work in a mixed language environment. Let's
+					put Docker volume mounting to good use.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-go-install" data-state="vs-go-install">
+				<video src="images/docker-go-install.mp4"></video>
+				<aside class="notes">
+					I have my Potato Service REST API written in Go located in the PotatoService subdirectory in my
+					project. I can mount this directory in the root Go folder inside of the container so that
+					the Go toolchain can compile my code. I'll run the 'go install' command to compile and install
+					my application into the 'bin' directory.
+				</aside>
+			</section>
+
+			<section class="full-screen-video" id="docker-go-run" data-state="vs-go-run">
+				<video src="images/docker-go-run.mp4"></video>
+				<aside class="notes">
+					Now let's run the newly compiled potato service binary and see what it returns
+					in the browser. As you can see, it returns the string we expect in the code.
+				</aside>
+			</section>
+
+			<section id="service-orchestration" data-background-color="#0DB7ED">
+				<h1 class="title">Service Orchestration</h1>
+				<aside class="notes">
+					Service orchestration is the process of running several microservices on a single host.
+					In our current Bananas project, we can use Docker Compose to spin up all of our
+					containers in a single command for development. Docker compose also has the added
+					bonus of multiplexing the STDOUT streams of each container to a single terminal
+					instance.
+				</aside>
+			</section>
+
+			<section id="docker-compose-file">
+				<pre><code class="yaml" data-trim>
+					version: '3'
+					services:
+						grocery-app:
+						volumes:
+						- ./GroceryApp/dist:/etc/nginx/html
+						- ./GroceryApp/nginx.conf:/etc/nginx/nginx.conf
+						- ~/.ssl:/ssl
+						image: nginx:alpine
+						container_name: grocery-app
+						stdin_open: true
+						ports:
+						- "8080:80"
+					
+						banana-service:
+						volumes:
+						- ./BananaService:/service
+						image: microsoft/aspnetcore-build
+						container_name: banana-service
+						stdin_open: true
+						working_dir: /service
+						ports:
+						- "8081:80"
+						command: dotnet run
+					
+						potato-service:
+						volumes:
+						- ./PotatoService:/go
+						image: golang:alpine
+						container_name: potato-service
+						stdin_open: true
+						ports:
+						- "8082:9090"
+						command: bin/potato-service
+				</code></pre>
+			</section>
+
+			<section class="full-screen-video" id="docker-compose-application" data-state="vs-compose-application">
+				<video src="images/docker-compose-application.mp4"></video>
+				<aside class="notes">
+					What does this look like? Well, let's run docker-compose up inside our project
+					root directory and see what happens. Notice that there are five containers that
+					start up. Those containers are defined in the docker-compose YAML file.
+
+					Now that the containers are up we can navigate to the various ports on
+					localhost that each container is exposing on the host and see not only our API
+					programs, but also the web application we've created.
+				</aside>
+			</section>
+
+			<section id="docker-compose-tools">
+				<pre><code data-trim class="yaml">
+				  grocery-app-tests:
+					volumes:
+					- ./GroceryApp:/project
+					image: node:alpine
+					container_name: grocery-app-tests
+					stdin_open: true
+					working_dir: /project
+					command: npm run test:watch
+					environment:
+					- SHELL=/bin/sh
+				
+				  grocery-app-build:
+					volumes:
+					- ./GroceryApp:/project
+					image: node:alpine
+					container_name: grocery-app-build
+					stdin_open: true
+					working_dir: /project
+					command: npm run build:watch
+				</code></pre>
+				<aside class="notes">
+					Let's add two more containers to our compose file. The first will run
+					the 'test:watch' target of our package.json and automatically run our unit tests
+					when we save our files. The second one will enable the 'build:watch' target,
+					causing Webpack to rebuild our files on changes. Let's see this in action and
+					make some changes to both the tests and the application.
+				</aside>
+			</section>
+	
+			<section class="full-screen-video" id="docker-compose-dev-tools" data-state="vs-compose-dev-tools">
+				<video src="images/docker-compose-dev-tools.mp4"></video>
+			</section>
+
+			<section id="recap" data-background-color="#0DB7ED">
+				<h1 class="title">Recap</h1>
+				<aside class="notes">
+					What have we learned?
+				</aside>
+			</section>
+
+			<section id="recap-items">
+				<h2 class="fragment current-visible zero">Machine Configurations</h2>
+				<h2 class="fragment current-visible zero">Local Stack Orchestration</h2>
+				<h2 class="fragment current-visible zero">Portable Environments</h2>
+				<h2 class="fragment current-visible zero">Time to First Code</h2>
+			</section>			
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script src="js/custom.js"></script>
+</body>
+
+</html>

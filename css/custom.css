@@ -1,0 +1,230 @@
+:root {
+    --docker-blue: #0db7ed;
+    --docker-dark-blue: #384d54;
+}
+
+.reveal .slides {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+}
+
+.reveal code {
+    font-family: Hack, monospace;
+}
+
+.reveal img, .reveal video {
+    max-width: none;
+    max-height: none;
+}
+
+.reveal section.full-screen-video {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.reveal section.full-screen-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: top left;
+}
+
+.reveal .fragment.zero:not(.current) {
+    height: 0;
+}
+
+.reveal .slide-background {
+    background-position: top left;
+}
+
+.reveal div.twist-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reveal div.twist-container .left-twist {
+    transform: rotateZ(-90deg);
+    text-align: justify;
+    font-size: 1.2em;
+    margin: -7px -45px 0 0;
+}
+
+.reveal section ul.inline-list {
+    list-style: none;
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+}
+
+.reveal section ul.inline-list li:after {
+    content: "|";
+    padding: 0 10px;
+}
+
+.reveal section ul.inline-list li:last-child:after {
+    content: "";
+    padding: 0;
+}
+
+.reveal h2 {
+    color: var(--docker-blue);
+}
+
+.reveal h1.title {
+    color: white;
+}
+
+/* ----------
+    SLIDES
+---------- */
+
+.reveal section.splash {
+    padding: 0 200px;
+}
+
+.reveal section.splash h1 {
+    font-size: 1.5em;
+    text-align: left;
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+
+.reveal section.splash h2 {
+    text-align: left;
+    margin: -80px 0 0 0;
+    padding: 46px 0 0 10px;
+    border: 6px dotted var(--docker-blue);
+    width: 6.9em;
+}
+
+.reveal #command-break-down code {
+    font-size: 0.5em;
+}
+
+.reveal #command-break-down span.current-fragment {
+    border-bottom: 2px solid var(--docker-blue);
+}
+
+.reveal section#docker-dotnet-serve video {
+    transform: scale(1.8);
+    object-position: -40px -30px;
+}
+
+.reveal section#docker-dotnet-setup video {
+    transform: scale(1.8);
+    object-position: -35px -48px;
+}
+
+.reveal section#docker-dev-shell-npm video {
+    transform: scale(1.4);
+    object-position: -140px -150px;
+}
+
+.reveal section#docker-go-run video {
+    transform: scale(1.5);
+    object-position: -100px -100px;
+}
+
+.reveal section#docker-go-install video {
+    transform: scale(1.5);
+    object-position: -100px -100px;
+}
+
+.reveal section#docker-compose-application video, .reveal section#docker-compose-dev-tools video {
+    transform: scale(1.3);
+    object-position: -40px -50px;
+}
+
+.reveal section#docker-npm-shell-boot video {
+    transform: scale(1.5);
+    object-position: -100px -100px;
+}
+
+.reveal section#docker-npm-shell-install video {
+    object-position: -100px -100px;
+    transform: scale(1.6);
+}
+
+.reveal section#docker-npm-init video {
+    transform: scale(1.4);
+    object-position: -80px -80px;
+}
+
+.reveal #we-have-issues h1 {
+    font-size: 5.5rem;
+    text-transform: lowercase;
+}
+
+.reveal #we-have-issues h1 span {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    color: var(--docker-blue);
+}
+
+.reveal #typical-toolchains h2 {
+    margin: 0 0 -25px 0;
+    text-align: left;
+    color: var(--docker-blue);
+}
+
+.reveal #typical-toolchains div:nth-of-type(even) h2 {
+    text-align: right;
+}
+
+.reveal #typical-toolchains div:nth-of-type(even) ul {
+    justify-content: end;
+}
+
+.reveal #typical-toolchains div {
+    padding: 0 40px;
+}
+
+.reveal #combine-problem h1 {
+    color: var(--docker-blue);
+    margin: 0;
+    font-size: 4em;
+}
+
+.reveal #combine-problem span {
+    font-size: 1.7em;
+}
+
+.reveal #not-impressed h2 {
+    font-size: 6em;
+}
+
+.reveal #go-splash h1 {
+    margin: 20px 0 0 200px;
+}
+
+.reveal #whats-the-problem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reveal #the-problem ul.inline-list {
+    justify-content: center;
+}
+
+.reveal #docker-toolchains #lock-runtimes ul {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    width: 40%;
+    flex-flow: wrap;
+    margin: 0 auto;
+}
+
+.reveal #docker-toolchains #lock-runtimes ul li {
+    width: 150px;
+    border: 1px solid white;
+    margin: 10px;
+    font-size: 0.6em;
+    text-align: center;
+}

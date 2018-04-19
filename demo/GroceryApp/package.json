@@ -1,0 +1,37 @@
+{
+  "name": "grocery-app",
+  "version": "1.0.0",
+  "description": "An app for managing a grocery store.",
+  "main": "main.js",
+  "scripts": {
+    "build:watch": "webpack",
+    "test:watch": "chokidar -p --pol-interval=2000 -c jest src/**/*.spec.js src/**/*.spec.jsx"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "chokidar-cli": "^1.2.0",
+    "jest": "^22.4.3",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ]
+  },
+  "jest": {
+    "testRegex": ".*\\.spec\\.(js|jsx)$",
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ]
+  }
+}
